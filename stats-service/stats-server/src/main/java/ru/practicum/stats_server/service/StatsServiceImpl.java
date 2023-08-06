@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.practicum.stats_data.model.EndpointHit;
 import ru.practicum.stats_data.model.ViewStats;
-import ru.practicum.stats_server.model.Stats;
 import ru.practicum.stats_server.model.StatsMapper;
 import ru.practicum.stats_server.repository.StatsRepository;
 
@@ -16,6 +15,7 @@ import java.util.List;
 public class StatsServiceImpl implements StatsService {
 
     private final StatsRepository statsRepository;
+
     @Override
     public void addHit(EndpointHit endpointHit) {
         statsRepository.save(StatsMapper.endpointHitToStats(endpointHit));
@@ -24,15 +24,15 @@ public class StatsServiceImpl implements StatsService {
     @Override
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
 
-        if(uris == null) {
-            if(!unique) {
+        if (uris == null) {
+            if (!unique) {
                 return statsRepository.getStatsBetweenStartAndEnd(start, end);
             } else {
                 return statsRepository.getStatsBetweenStartAndEndUnique(start, end);
             }
         }
 
-        if(!unique) {
+        if (!unique) {
             return statsRepository.getStatsBetweenStartAndEndAndUris(start, end, uris);
         }
         return statsRepository.getStatsBetweenStartAndEndAndUrisUnique(start, end, uris);

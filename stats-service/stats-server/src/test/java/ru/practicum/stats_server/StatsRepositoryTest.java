@@ -60,8 +60,8 @@ public class StatsRepositoryTest {
 
         assertEquals(2,listStats.size());
 
-        for(ViewStats one:listStats) {
-            if(one.getUri().equals("/events/2")) {
+        for (ViewStats one:listStats) {
+            if (one.getUri().equals("/events/2")) {
                 assertEquals(2,one.getHits());
             }
         }
@@ -73,8 +73,8 @@ public class StatsRepositoryTest {
 
         assertEquals(2,listStats.size());
 
-        for(ViewStats one:listStats) {
-            if(one.getUri().equals("/events/2")) {
+        for (ViewStats one:listStats) {
+            if (one.getUri().equals("/events/2")) {
                 assertEquals(1,one.getHits());
             }
         }
@@ -87,8 +87,8 @@ public class StatsRepositoryTest {
 
         assertEquals(1,listStats.size());
 
-        for(ViewStats one:listStats) {
-            if(one.getUri().equals("/events/2")) {
+        for (ViewStats one:listStats) {
+            if (one.getUri().equals("/events/2")) {
                 assertEquals(2,one.getHits());
             }
         }
@@ -102,8 +102,8 @@ public class StatsRepositoryTest {
 
         assertEquals(1,listStats.size());
 
-        for(ViewStats one:listStats) {
-            if(one.getUri().equals("/events/2")) {
+        for (ViewStats one:listStats) {
+            if (one.getUri().equals("/events/2")) {
                 assertEquals(1,one.getHits());
             }
         }
