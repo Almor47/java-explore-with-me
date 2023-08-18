@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
-public class RequestServiceImpl implements RequestService{
+public class RequestServiceImpl implements RequestService {
 
     private final RequestRepository requestRepository;
     private final EventRepository eventRepository;
@@ -74,7 +74,7 @@ public class RequestServiceImpl implements RequestService{
             throw new ConflictException("Подтвержденных заявок не может быть больше лимита участников");
         }
 
-        return requestMapper.RequestToParticipationRequestDto(requestRepository.save(request));
+        return requestMapper.requestToParticipationRequestDto(requestRepository.save(request));
     }
 
     @Override
@@ -82,7 +82,7 @@ public class RequestServiceImpl implements RequestService{
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с userId " + userId + " не найден"));
         return requestRepository.findAllByRequesterId(userId).stream()
-                .map(requestMapper::RequestToParticipationRequestDto)
+                .map(requestMapper::requestToParticipationRequestDto)
                 .collect(Collectors.toList());
     }
 
@@ -94,11 +94,11 @@ public class RequestServiceImpl implements RequestService{
         Request request = requestRepository.findById(requestId)
                 .orElseThrow(() -> new NotFoundException("Событие с eventId " + requestId + " не найдено"));
 
-        if(!request.getRequester().getId().equals(userId)) {
+        if (!request.getRequester().getId().equals(userId)) {
             throw new ConflictException("Пользователь с userId " + userId
                     + " не является создателем запроса с requestId " + requestId);
         }
         request.setStatus(RequestStatus.CANCELED);
-        return requestMapper.RequestToParticipationRequestDto(requestRepository.save(request));
+        return requestMapper.requestToParticipationRequestDto(requestRepository.save(request));
     }
 }

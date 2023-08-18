@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.main_service.event.dto.*;
-import ru.practicum.main_service.event.model.Event;
 import ru.practicum.main_service.event.service.EventService;
 
 import javax.validation.Valid;

@@ -52,7 +52,7 @@ public class EventServiceImpl implements EventService {
         Category category = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(
                 () -> new NotFoundException("Категория с id " + newEventDto.getCategory() + " не найдена"));
         checkTimeStarts(LocalDateTime.now(), newEventDto.getEventDate());
-        Event savedEvent = eventRepository.save(eventMapper.NewEventDtoToEvent(newEventDto, location, user, category, LocalDateTime.now(), State.PENDING));
+        Event savedEvent = eventRepository.save(eventMapper.newEventDtoToEvent(newEventDto, location, user, category, LocalDateTime.now(), State.PENDING));
         return getEventFullDto(savedEvent);
 
     }
@@ -66,7 +66,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> views = statsService.getViews(events);
         Map<Long, Long> confirmedRequests = statsService.getConfirmedRequest(events);
         return events.stream()
-                .map(event -> eventMapper.EventToEventShortDto(event,
+                .map(event -> eventMapper.eventToEventShortDto(event,
                         views.getOrDefault(event.getId(), 0L),
                         confirmedRequests.getOrDefault(event.getId(), 0L)))
                 .collect(Collectors.toList());
@@ -140,7 +140,7 @@ public class EventServiceImpl implements EventService {
     public List<ParticipationRequestDto> getUserEventRequest(Long userId, Long eventId) {
         checkUserAndInitiator(userId, eventId);
         return requestRepository.findAllByEventId(eventId).stream()
-                .map(requestMapper::RequestToParticipationRequestDto)
+                .map(requestMapper::requestToParticipationRequestDto)
                 .collect(Collectors.toList());
     }
 
@@ -185,9 +185,9 @@ public class EventServiceImpl implements EventService {
 
 
         return new EventRequestStatusUpdateResult(confirmedRequests.stream()
-                .map(requestMapper::RequestToParticipationRequestDto)
+                .map(requestMapper::requestToParticipationRequestDto)
                 .collect(Collectors.toList()), rejectedRequests.stream()
-                .map(requestMapper::RequestToParticipationRequestDto)
+                .map(requestMapper::requestToParticipationRequestDto)
                 .collect(Collectors.toList()));
     }
 
@@ -201,7 +201,7 @@ public class EventServiceImpl implements EventService {
         Map<Long, Long> views = statsService.getViews(events);
         Map<Long, Long> confirmedRequests = statsService.getConfirmedRequest(events);
         return events.stream()
-                .map(event -> eventMapper.EventToEventFullDto(event,
+                .map(event -> eventMapper.eventToEventFullDto(event,
                         views.getOrDefault(event.getId(), 0L),
                         confirmedRequests.getOrDefault(event.getId(), 0L)))
                 .collect(Collectors.toList());
@@ -299,7 +299,7 @@ public class EventServiceImpl implements EventService {
             participantsLimit.put(one.getId(), one.getParticipantLimit());
         }
         List<EventShortDto> eventsShortDto = events.stream()
-                .map(event -> eventMapper.EventToEventShortDto(event,
+                .map(event -> eventMapper.eventToEventShortDto(event,
                         views.getOrDefault(event.getId(), 0L),
                         confirmedRequests.getOrDefault(event.getId(), 0L)))
                 .collect(Collectors.toList());
@@ -320,7 +320,7 @@ public class EventServiceImpl implements EventService {
     }
 
     private Location getLocation(LocationDto locationDto) {
-        Location location = LocationMapper.LocationDtoToLocation(locationDto);
+        Location location = LocationMapper.locationDtoToLocation(locationDto);
         return locationRepository.findByLatAndLon(location.getLat(), location.getLon())
                 .orElseGet(() -> locationRepository.save(location));
     }
@@ -341,9 +341,8 @@ public class EventServiceImpl implements EventService {
 
     private EventFullDto getEventFullDto(Event savedEvent) {
         Map<Long, Long> views = statsService.getViews(List.of(savedEvent));
-        //Map<Long, Long> views = Map.of(savedEvent.getId(),1L);
         Map<Long, Long> confirmedRequests = statsService.getConfirmedRequest(List.of(savedEvent));
-        return eventMapper.EventToEventFullDto(savedEvent,
+        return eventMapper.eventToEventFullDto(savedEvent,
                 views.getOrDefault(savedEvent.getId(), 0L),
                 confirmedRequests.getOrDefault(savedEvent.getId(), 0L));
 

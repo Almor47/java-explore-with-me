@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class LocationMapper implements Serializable {
 
-    public static Location LocationDtoToLocation(LocationDto locationDto) {
+    public static Location locationDtoToLocation(LocationDto locationDto) {
         return Location.builder()
                 .lon(locationDto.getLon())
                 .lat(locationDto.getLat())

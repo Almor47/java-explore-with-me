@@ -15,10 +15,10 @@ public interface EventMapper {
     @Mapping(target = "id", expression = "java(null)")
     @Mapping(target = "category", source = "category")
     @Mapping(target = "publishedOn", expression = "java(null)")
-    Event NewEventDtoToEvent(NewEventDto newEventDto, Location location, User initiator, Category category, LocalDateTime createdOn, State state);
+    Event newEventDtoToEvent(NewEventDto newEventDto, Location location, User initiator, Category category, LocalDateTime createdOn, State state);
 
-    EventFullDto EventToEventFullDto(Event event, Long views, Long confirmedRequests);
+    EventFullDto eventToEventFullDto(Event event, Long views, Long confirmedRequests);
 
-    EventShortDto EventToEventShortDto(Event event, Long views, Long confirmedRequests);
+    EventShortDto eventToEventShortDto(Event event, Long views, Long confirmedRequests);
 
 }

@@ -34,11 +34,11 @@ public class CompilationServiceImpl implements CompilationService {
         Pageable pageable = PageRequest.of(from / size, size);
         if (pinned == null) {
             return compilationRepository.findAll(pageable).toList().stream()
-                    .map(compilationMapper::CompilationToCompilationDto)
+                    .map(compilationMapper::compilationToCompilationDto)
                     .collect(Collectors.toList());
         }
         return compilationRepository.findAllByPinned(pinned, pageable).stream()
-                .map(compilationMapper::CompilationToCompilationDto)
+                .map(compilationMapper::compilationToCompilationDto)
                 .collect(Collectors.toList());
     }
 
@@ -46,7 +46,7 @@ public class CompilationServiceImpl implements CompilationService {
     public CompilationDto getCompilationById(@PathVariable Long compId) {
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException("Подборка событий с compId " + compId + " не найдена"));
-        return compilationMapper.CompilationToCompilationDto(compilation);
+        return compilationMapper.compilationToCompilationDto(compilation);
     }
 
     @Override
@@ -58,8 +58,8 @@ public class CompilationServiceImpl implements CompilationService {
             throw new NotFoundException("Найдено меньше событий");
         }
         Compilation compilation = compilationRepository.save(
-                compilationMapper.NewCompilationDtoToCompilation(newCompilationDto, events));
-        return compilationMapper.CompilationToCompilationDto(compilation);
+                compilationMapper.newCompilationDtoToCompilation(newCompilationDto, events));
+        return compilationMapper.compilationToCompilationDto(compilation);
     }
 
     @Override
@@ -88,7 +88,7 @@ public class CompilationServiceImpl implements CompilationService {
         if (updateCompilationRequest.getTitle() != null) {
             compilation.setTitle(updateCompilationRequest.getTitle());
         }
-        return compilationMapper.CompilationToCompilationDto(compilationRepository.save(compilation));
+        return compilationMapper.compilationToCompilationDto(compilationRepository.save(compilation));
     }
 
 

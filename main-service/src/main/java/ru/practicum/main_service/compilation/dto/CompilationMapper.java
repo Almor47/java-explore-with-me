@@ -11,7 +11,7 @@ import java.util.List;
 public interface CompilationMapper {
 
     @Mapping(target = "events", source = "events")
-    Compilation NewCompilationDtoToCompilation(NewCompilationDto newCompilationDto, List<Event> events);
+    Compilation newCompilationDtoToCompilation(NewCompilationDto newCompilationDto, List<Event> events);
 
-    CompilationDto CompilationToCompilationDto(Compilation compilation);
+    CompilationDto compilationToCompilationDto(Compilation compilation);
 }

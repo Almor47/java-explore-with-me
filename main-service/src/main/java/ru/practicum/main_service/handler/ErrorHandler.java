@@ -18,15 +18,13 @@ import java.time.format.DateTimeFormatter;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ApiError handleNotFoundException(NotFoundException e) {
         return new ApiError(e.getMessage(),
                 "The required object was not found.",
                 HttpStatus.NOT_FOUND.name(),
-                LocalDateTime.now().format(format));
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     @ExceptionHandler
@@ -41,7 +39,7 @@ public class ErrorHandler {
                 e.getBindingResult().getFieldError().getDefaultMessage(),
                 "Incorrectly made request.",
                 HttpStatus.BAD_REQUEST.name(),
-                LocalDateTime.now().format(format));
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     @ExceptionHandler
@@ -50,7 +48,7 @@ public class ErrorHandler {
         return new ApiError(e.getMessage(),
                 "Integrity constraint has been violated.",
                 HttpStatus.CONFLICT.name(),
-                LocalDateTime.now().format(format));
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     @ExceptionHandler
@@ -59,7 +57,7 @@ public class ErrorHandler {
         return new ApiError(e.getMessage(),
                 "Integrity constraint has been violated.",
                 HttpStatus.CONFLICT.name(),
-                LocalDateTime.now().format(format));
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 
     @ExceptionHandler
@@ -68,6 +66,6 @@ public class ErrorHandler {
         return new ApiError(e.getMessage(),
                 "Incorrectly made request.",
                 HttpStatus.BAD_REQUEST.name(),
-                LocalDateTime.now().format(format));
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 }

@@ -9,6 +9,6 @@ public interface RequestMapper {
 
     @Mapping(target = "event", expression = "java(request.getEvent().getId())")
     @Mapping(target = "requester", expression = "java(request.getRequester().getId())")
-    ParticipationRequestDto RequestToParticipationRequestDto(Request request);
+    ParticipationRequestDto requestToParticipationRequestDto(Request request);
 
 }
