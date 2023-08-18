@@ -3,8 +3,6 @@ package ru.practicum.main_service.event.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.practicum.main_service.event.dto.ParticipationRequestDto;
 import ru.practicum.main_service.event.dto.RequestMapper;
 import ru.practicum.main_service.event.enumerated.RequestStatus;
@@ -32,6 +30,7 @@ public class RequestServiceImpl implements RequestService{
     private final EventRepository eventRepository;
     private final UserRepository userRepository;
     private final RequestMapper requestMapper;
+    private final StatsService statsService;
 
 
     @Transactional
@@ -55,9 +54,8 @@ public class RequestServiceImpl implements RequestService{
             throw new ConflictException("Нельзя участвовать в неопубликованном событии");
         }
 
-        // если у события достигнут лимит запросов на участие - необходимо вернуть ошибку (Ожидается код ошибки 409)
         RequestStatus requestStatus;
-        if(!event.isRequestModeration()) {
+        if (event.getParticipantLimit() == 0 || !event.isRequestModeration()) {
             requestStatus = RequestStatus.CONFIRMED;
         } else {
             requestStatus = RequestStatus.PENDING;
@@ -70,11 +68,17 @@ public class RequestServiceImpl implements RequestService{
                 .status(requestStatus)
                 .build();
 
+        long futureParticipant = statsService.getConfirmedRequest(List.of(event)).getOrDefault(eventId, 0L) + 1;
+        long maxParticipant = event.getParticipantLimit();
+        if (maxParticipant != 0 && futureParticipant > maxParticipant) {
+            throw new ConflictException("Подтвержденных заявок не может быть больше лимита участников");
+        }
+
         return requestMapper.RequestToParticipationRequestDto(requestRepository.save(request));
     }
 
     @Override
-    public List<ParticipationRequestDto> getAllUserRequests(@PathVariable Long userId) {
+    public List<ParticipationRequestDto> getAllUserRequests(Long userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("Пользователь с userId " + userId + " не найден"));
         return requestRepository.findAllByRequesterId(userId).stream()

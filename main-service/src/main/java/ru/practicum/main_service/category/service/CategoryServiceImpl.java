@@ -45,11 +45,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void deleteCategoryById(Long catId) {
-        //
-        //
-        // Обратите внимание: с категорией не должно быть связано ни одного события.
-        //
-        //
         getCategoryById(catId);
         categoryRepository.deleteById(catId);
     }
@@ -57,9 +52,6 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDto patchCategoryById(Long catId, CategoryDto categoryDto) {
-        //
-        // Обратите внимание: имя категории должно быть уникальным
-        //
         Category category = categoryRepository.findById(catId).orElseThrow(
                 () -> new NotFoundException("Категория с catId " + catId + " не найдена"));
         category.setName(categoryDto.getName());

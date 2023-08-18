@@ -2,7 +2,6 @@ package ru.practicum.main_service.event.model;
 
 import lombok.*;
 import ru.practicum.main_service.category.model.Category;
-import ru.practicum.main_service.event.dto.LocationDto;
 import ru.practicum.main_service.event.enumerated.State;
 import ru.practicum.main_service.user.model.User;
 
@@ -60,5 +59,23 @@ public class Event {
 
     private String title;
 
-
+    @Override
+    public String toString() {
+        return "Event{" +
+                "id=" + id +
+                ", annotation='" + annotation + '\'' +
+                ", category=" + category +
+                ", description='" + description + '\'' +
+                ", eventDate=" + eventDate +
+                ", location=" + location +
+                ", paid=" + paid +
+                ", participantLimit=" + participantLimit +
+                ", requestModeration=" + requestModeration +
+                ", createdOn=" + createdOn +
+                ", publishedOn=" + publishedOn +
+                ", state=" + state +
+                ", initiator=" + initiator +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }

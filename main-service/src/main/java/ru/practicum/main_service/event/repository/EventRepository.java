@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface EventRepository extends JpaRepository<Event,Long> {
+public interface EventRepository extends JpaRepository<Event, Long>, EventCriteriaRepository {
 
     Optional<Event> findByIdAndInitiatorId(Long eventId, Long userId);
 
     List<Event> findAllByInitiatorId(Long userId, Pageable pageable);
+
+    List<Event> findAllByIdIn(List<Long> ids);
+
 }

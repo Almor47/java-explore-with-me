@@ -25,4 +25,6 @@ public interface RequestRepository extends JpaRepository<Request,Long> {
             "GROUP BY r.event.id")
     List<RequestStats> getConfirmedRequest(List<Long> eventsId);
 
+    List<Request> findAllByIdIn(List<Long> ids);
+
 }

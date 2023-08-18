@@ -21,10 +21,10 @@ public class CompilationPublicController {
     private final CompilationService compilationService;
 
     @GetMapping
-    public List<CompilationDto> getCompilations(@RequestParam Boolean pinned,
-                                                @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Long from,
-                                                @RequestParam(required = false, defaultValue = "10") @Positive Long size) {
-        return compilationService.getCompilations(pinned,from,size);
+    public List<CompilationDto> getCompilations(@RequestParam(required = false) Boolean pinned,
+                                                @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer from,
+                                                @RequestParam(required = false, defaultValue = "10") @Positive Integer size) {
+        return compilationService.getCompilations(pinned, from, size);
     }
 
     @GetMapping("/{compId}")

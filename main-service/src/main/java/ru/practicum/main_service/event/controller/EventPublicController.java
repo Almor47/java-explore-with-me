@@ -26,17 +26,17 @@ public class EventPublicController {
     private final EventService eventService;
 
     @GetMapping
-    public List<EventShortDto> getEventsPublic(@RequestParam String text,
-                                               @RequestParam List<Long> categories,
-                                               @RequestParam Boolean paid,
-                                               @RequestParam @DateTimeFormat(pattern = "patternDate") LocalDateTime rangeStart,
-                                               @RequestParam @DateTimeFormat(pattern = "patternDate") LocalDateTime rangeEnd,
+    public List<EventShortDto> getEventsPublic(@RequestParam(required = false) String text,
+                                               @RequestParam(required = false) List<Long> categories,
+                                               @RequestParam(required = false) Boolean paid,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern = patternDate) LocalDateTime rangeStart,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern = patternDate) LocalDateTime rangeEnd,
                                                @RequestParam(required = false, defaultValue = "false") Boolean onlyAvailable,
-                                               @RequestParam String sort,
-                                               @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Long from,
-                                               @RequestParam(required = false, defaultValue = "10") @Positive Long size,
+                                               @RequestParam(required = false) String sort,
+                                               @RequestParam(required = false, defaultValue = "0") @PositiveOrZero Integer from,
+                                               @RequestParam(required = false, defaultValue = "10") @Positive Integer size,
                                                HttpServletRequest request) {
-        return eventService.getEventsPublic(text,categories,paid,rangeStart,rangeEnd,onlyAvailable,sort,from,size,request);
+        return eventService.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size, request);
     }
 
     @GetMapping("/{id}")

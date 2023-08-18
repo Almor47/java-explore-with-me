@@ -3,11 +3,9 @@ package ru.practicum.main_service.event.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -17,12 +15,14 @@ import java.time.format.DateTimeFormatter;
 public class NewEventDto {
 
     @Size(min = 20, max = 2000)
+    @NotNull
     private String annotation;
 
     @NotNull
     private Long category;
 
     @Size(min = 20, max = 7000)
+    @NotNull
     private String description;
 
     @NotNull

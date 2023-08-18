@@ -5,6 +5,7 @@ import lombok.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -14,10 +15,10 @@ import java.util.List;
 @NoArgsConstructor
 public class NewCompilationDto {
 
-    private List<Long> events;
+    private List<Long> events = new ArrayList<>();
 
     @NotNull
-    private Boolean pinned;
+    private Boolean pinned = false;
 
     @NotBlank
     @Size(min = 1, max = 50)

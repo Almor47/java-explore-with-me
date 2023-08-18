@@ -1,6 +1,8 @@
 package ru.practicum.main_service.compilation.model;
 
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import ru.practicum.main_service.event.model.Event;
 
 import javax.persistence.*;
@@ -24,8 +26,10 @@ public class Compilation {
 
     private String title;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinColumn()
+    @ManyToMany
+    @JoinTable(name = "compilations_events", joinColumns = @JoinColumn(name = "compilation_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "event_id", referencedColumnName = "id"))
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Event> events;
 
 

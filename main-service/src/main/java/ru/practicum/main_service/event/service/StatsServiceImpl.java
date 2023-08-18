@@ -2,23 +2,21 @@ package ru.practicum.main_service.event.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.main_service.event.dto.RequestStats;
 import ru.practicum.main_service.event.model.Event;
 import ru.practicum.main_service.event.repository.RequestRepository;
-//import ru.practicum.stats_client.StatsClient;
+import ru.practicum.stats_client.StatsClient;
 import ru.practicum.stats_data.model.EndpointHit;
 import ru.practicum.stats_data.model.ViewStats;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,33 +24,37 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class StatsServiceImpl implements StatsService {
 
-    //private final StatsClient statsClient;
-    //private final ObjectMapper objectMapper;
-    //private final RequestRepository requestRepository;
+    private final StatsClient statsClient;
+    private final ObjectMapper objectMapper;
+    private final RequestRepository requestRepository;
+
+    @Value(value = "${app}")
+    private String app;
 
     @Override
     public void addHit(HttpServletRequest request) {
-        /*statsClient.addHit(EndpointHit.builder()
+        statsClient.addHit(EndpointHit.builder()
+                .app(app)
                 .uri(request.getRequestURI())
                 .ip(request.getRemoteAddr())
                 .timestamp(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
-                .build());*/
+                .build());
     }
 
     @Override
     public List<ViewStats> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        /*ResponseEntity<Object> ans = statsClient.getStats(start, end, uris, unique);
+        ResponseEntity<Object> ans = statsClient.getStats(start, end, uris, unique);
         try {
-            return List.of(objectMapper.readValue(objectMapper.writeValueAsString(ans.getBody()), ViewStats[].class));
+            return Arrays.asList(objectMapper.readValue(objectMapper.writeValueAsString(ans.getBody()), ViewStats[].class));
         } catch (Exception e) {
             throw new ClassCastException(e.getMessage());
-        }*/
-        return null;
+        }
     }
 
     @Override
     public Map<Long, Long> getViews(List<Event> events) {
-        /*Map<Long, Long> views = new HashMap<>();
+        Boolean unique = true;
+        Map<Long, Long> views = new HashMap<>();
         if (events.size() == 0) {
             return views;
         }
@@ -72,19 +74,18 @@ public class StatsServiceImpl implements StatsService {
                     .map(eventId -> "/events/" + eventId)
                     .collect(Collectors.toList());
 
-            List<ViewStats> ans = getStats(start, end, uris, null);
+            List<ViewStats> ans = getStats(start, end, uris, unique);
             for (ViewStats one : ans) {
-                Long eventId = Long.valueOf(one.getUri().split("/")[2]);
+                Long eventId = Long.parseLong(one.getUri().split("/", 0)[2]);
                 views.put(eventId, views.getOrDefault(eventId, 0L) + one.getHits());
             }
         }
-        return views;*/
-        return null;
+        return views;
     }
 
     @Override
     public Map<Long, Long> getConfirmedRequest(List<Event> events) {
-        /*List<Event> publishedEvents = events.stream()
+        List<Event> publishedEvents = events.stream()
                 .filter(event -> event.getPublishedOn() != null)
                 .collect(Collectors.toList());
 
@@ -100,7 +101,6 @@ public class StatsServiceImpl implements StatsService {
         for (RequestStats one : statsRequest) {
             confirmedRequest.put(one.getEventId(), one.getConfirmedRequests());
         }
-        return confirmedRequest;*/
-        return null;
+        return confirmedRequest;
     }
 }
