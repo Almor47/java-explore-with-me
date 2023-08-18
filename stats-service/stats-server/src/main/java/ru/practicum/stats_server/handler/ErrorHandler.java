@@ -11,14 +11,12 @@ import java.time.format.DateTimeFormatter;
 @RestControllerAdvice
 public class ErrorHandler {
 
-    private final static DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ApiError handleRuntimeExceptionException(RuntimeException e) {
         return new ApiError(e.getMessage(),
                 "Start time after end time.",
                 HttpStatus.CONFLICT.name(),
-                LocalDateTime.now().format(format));
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }
 }
