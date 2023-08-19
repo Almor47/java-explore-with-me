@@ -197,7 +197,16 @@ public class EventServiceImpl implements EventService {
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
             throw new ConflictException("Время старта не может быть позже времени окончания");
         }
-        List<Event> events = eventRepository.getEventsByAdmin(users, states, categories, rangeStart, rangeEnd, from, size);
+        ParametersForAdminSearch parametersForAdminSearch = ParametersForAdminSearch.builder()
+                .users(users)
+                .states(states)
+                .categories(categories)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .from(from)
+                .size(size)
+                .build();
+        List<Event> events = eventRepository.getEventsByAdmin(parametersForAdminSearch);
         Map<Long, Long> views = statsService.getViews(events);
         Map<Long, Long> confirmedRequests = statsService.getConfirmedRequest(events);
         return events.stream()
@@ -286,8 +295,17 @@ public class EventServiceImpl implements EventService {
         if (rangeStart != null && rangeEnd != null && rangeStart.isAfter(rangeEnd)) {
             throw new BadRequestException("Время старта позже времени окончания события ");
         }
+        ParametersForPublicSearch parametersForPublicSearch = ParametersForPublicSearch.builder()
+                .text(text)
+                .categories(categories)
+                .paid(paid)
+                .rangeStart(rangeStart)
+                .rangeEnd(rangeEnd)
+                .from(from)
+                .size(size)
+                .build();
 
-        List<Event> events = eventRepository.getEventsPublic(text, categories, paid, rangeStart, rangeEnd, from, size);
+        List<Event> events = eventRepository.getEventsPublic(parametersForPublicSearch);
 
         if (events.size() == 0) {
             return List.of();

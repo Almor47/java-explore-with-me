@@ -33,7 +33,6 @@ public class ErrorHandler {
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
         e.printStackTrace(printWriter);
-        //stringWriter.toString();
 
         return new ApiError(
                 e.getBindingResult().getFieldError().getDefaultMessage(),

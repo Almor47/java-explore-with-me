@@ -1,5 +1,7 @@
 package ru.practicum.main_service.event.repository;
 
+import ru.practicum.main_service.event.dto.ParametersForAdminSearch;
+import ru.practicum.main_service.event.dto.ParametersForPublicSearch;
 import ru.practicum.main_service.event.enumerated.State;
 import ru.practicum.main_service.event.model.Event;
 
@@ -17,78 +19,76 @@ public class EventCriteriaRepositoryImpl implements EventCriteriaRepository {
     @PersistenceContext
     private EntityManager entityManager;
 
-    public List<Event> getEventsPublic(String text, List<Long> categories, Boolean paid, LocalDateTime rangeStart,
-                                       LocalDateTime rangeEnd, Integer from, Integer size) {
+    public List<Event> getEventsPublic(ParametersForPublicSearch parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Event> queryEvents = builder.createQuery(Event.class);
         Root<Event> rootEvents = queryEvents.from(Event.class);
         Predicate predicate = builder.conjunction();
 
-        if (text != null && !text.isEmpty()) {
-            Predicate predicate1 = builder.like(builder.lower(rootEvents.get("annotation")), "%" + text.toLowerCase() + "%");
-            Predicate predicate2 = builder.like(builder.lower(rootEvents.get("description")), "%" + text.toLowerCase() + "%");
+        if (parameters.getText() != null && !parameters.getText().isEmpty()) {
+            Predicate predicate1 = builder.like(builder.lower(rootEvents.get("annotation")), "%" + parameters.getText().toLowerCase() + "%");
+            Predicate predicate2 = builder.like(builder.lower(rootEvents.get("description")), "%" + parameters.getText().toLowerCase() + "%");
             predicate = builder.and(predicate, builder.or(predicate1, predicate2));
         }
 
-        if (categories != null && categories.size() != 0) {
-            predicate = builder.and(predicate, rootEvents.get("category").in(categories));
+        if (parameters.getCategories() != null && parameters.getCategories().size() != 0) {
+            predicate = builder.and(predicate, rootEvents.get("category").in(parameters.getCategories()));
         }
 
-        if (paid != null) {
-            predicate = builder.and(predicate, rootEvents.get("paid").in(paid));
+        if (parameters.getPaid() != null) {
+            predicate = builder.and(predicate, rootEvents.get("paid").in(parameters.getPaid()));
         }
 
-        if (rangeStart == null && rangeEnd == null) {
+        if (parameters.getRangeStart() == null && parameters.getRangeEnd() == null) {
             predicate = builder.and(predicate, builder.greaterThanOrEqualTo(rootEvents.get("eventDate"), LocalDateTime.now()));
         } else {
-            if (rangeStart != null) {
-                predicate = builder.and(predicate, builder.greaterThanOrEqualTo(rootEvents.get("eventDate"), rangeStart));
+            if (parameters.getRangeStart() != null) {
+                predicate = builder.and(predicate, builder.greaterThanOrEqualTo(rootEvents.get("eventDate"), parameters.getRangeStart()));
             }
 
-            if (rangeEnd != null) {
-                predicate = builder.and(predicate, builder.lessThanOrEqualTo(rootEvents.get("eventDate"), rangeEnd));
+            if (parameters.getRangeEnd() != null) {
+                predicate = builder.and(predicate, builder.lessThanOrEqualTo(rootEvents.get("eventDate"), parameters.getRangeEnd()));
             }
         }
 
         predicate = builder.and(predicate, rootEvents.get("state").in(State.PUBLISHED));
         queryEvents.select(rootEvents).where(predicate);
         return entityManager.createQuery(queryEvents)
-                .setFirstResult(from)
-                .setMaxResults(size)
+                .setFirstResult(parameters.getFrom())
+                .setMaxResults(parameters.getSize())
                 .getResultList();
     }
 
-    public List<Event> getEventsByAdmin(List<Long> users, List<State> states, List<Long> categories, LocalDateTime rangeStart,
-                                        LocalDateTime rangeEnd, Integer from, Integer size) {
+    public List<Event> getEventsByAdmin(ParametersForAdminSearch parameters) {
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
         CriteriaQuery<Event> queryEvents = builder.createQuery(Event.class);
         Root<Event> rootEvents = queryEvents.from(Event.class);
         Predicate predicate = builder.conjunction();
 
-        if (users != null && users.size() != 0) {
-            predicate = builder.and(predicate, rootEvents.get("initiator").in(users));
+        if (parameters.getUsers() != null && parameters.getUsers().size() != 0) {
+            predicate = builder.and(predicate, rootEvents.get("initiator").in(parameters.getUsers()));
         }
 
-        if (states != null && states.size() != 0) {
-            predicate = builder.and(predicate, rootEvents.get("state").in(states));
+        if (parameters.getStates() != null && parameters.getStates().size() != 0) {
+            predicate = builder.and(predicate, rootEvents.get("state").in(parameters.getStates()));
         }
 
-        if (categories != null && categories.size() != 0) {
-            predicate = builder.and(predicate, rootEvents.get("category").in(categories));
+        if (parameters.getCategories() != null && parameters.getCategories().size() != 0) {
+            predicate = builder.and(predicate, rootEvents.get("category").in(parameters.getCategories()));
         }
 
-        if (rangeStart != null) {
-            predicate = builder.and(predicate, builder.greaterThanOrEqualTo(rootEvents.get("eventDate"), rangeStart));
+        if (parameters.getRangeStart() != null) {
+            predicate = builder.and(predicate, builder.greaterThanOrEqualTo(rootEvents.get("eventDate"), parameters.getRangeStart()));
         }
 
-        if (rangeEnd != null) {
-            predicate = builder.and(predicate, builder.lessThanOrEqualTo(rootEvents.get("eventDate"), rangeEnd));
+        if (parameters.getRangeEnd() != null) {
+            predicate = builder.and(predicate, builder.lessThanOrEqualTo(rootEvents.get("eventDate"), parameters.getRangeEnd()));
         }
 
         queryEvents.select(rootEvents).where(predicate);
         return entityManager.createQuery(queryEvents)
-                .setFirstResult(from)
-                .setMaxResults(size)
+                .setFirstResult(parameters.getFrom())
+                .setMaxResults(parameters.getSize())
                 .getResultList();
     }
 }
