@@ -21,7 +21,7 @@
               "pm.test(\"Test user 'id' field\", function () {\r",
               "    var jsonData = pm.response.json();\r",
               "    pm.expect(jsonData).to.have.property('id');\r",
-              "    pm.expect(jsonData.id, '\"id\" must be 1').to.eql(1);\r",
+              "    pm.expect(jsonData.id, '\"id\" must be 136').to.eql(136);\r",
               "});\r",
               "pm.test(\"Test user 'name' field\", function () {\r",
               "    var jsonData = pm.response.json();\r",
@@ -78,7 +78,7 @@
               "pm.test(\"Test user 'id' field\", function () {\r",
               "    var jsonData = pm.response.json();\r",
               "    pm.expect(jsonData).to.have.property('id');\r",
-              "    pm.expect(jsonData.id, '\"id\" must be 2').to.eql(2);\r",
+              "    pm.expect(jsonData.id, '\"id\" must be 137').to.eql(137);\r",
               "});\r",
               "pm.test(\"Test user 'name' field\", function () {\r",
               "    var jsonData = pm.response.json();\r",
@@ -313,14 +313,20 @@
           }
         },
         "url": {
-          "raw": "{{baseUrl}}/admin/events/2",
+          "raw": "{{baseUrl}}/admin/events/:eventId",
           "host": [
             "{{baseUrl}}"
           ],
           "path": [
             "admin",
             "events",
-            "2"
+            ":eventId"
+          ],
+          "variable": [
+            {
+              "key": "eventId",
+              "value": "107"
+            }
           ]
         }
       },
@@ -380,11 +386,11 @@
           "variable": [
             {
               "key": "userId",
-              "value": "1"
+              "value": "136"
             },
             {
               "key": "eventId",
-              "value": "2"
+              "value": "107"
             }
           ]
         }
@@ -434,11 +440,11 @@
           "variable": [
             {
               "key": "userId",
-              "value": "1"
+              "value": "136"
             },
             {
               "key": "eventId",
-              "value": "1"
+              "value": "106"
             }
           ]
         }
@@ -499,11 +505,11 @@
           "variable": [
             {
               "key": "userId",
-              "value": "1"
+              "value": "136"
             },
             {
               "key": "eventId",
-              "value": "2"
+              "value": "107"
             }
           ]
         }
@@ -550,7 +556,7 @@
           "variable": [
             {
               "key": "eventId",
-              "value": "2"
+              "value": "107"
             }
           ]
         }
@@ -597,7 +603,7 @@
           "variable": [
             {
               "key": "eventId",
-              "value": "1"
+              "value": "106"
             }
           ]
         }
