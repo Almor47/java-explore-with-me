@@ -10,6 +10,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.practicum.stats_data.model.EndpointHit;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +19,7 @@ import java.util.Map;
 public class StatsClient extends BaseClient {
 
     @Autowired
-    public StatsClient(@Value("&{stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
+    public StatsClient(@Value("${stats-server.url}") String serverUrl, RestTemplateBuilder builder) {
         super(
                 builder
                         .uriTemplateHandler(new DefaultUriBuilderFactory(serverUrl))
@@ -31,13 +33,22 @@ public class StatsClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
-        Map<String, Object> parameters = Map.of(
-                "start", start,
-                "end", end,
-                "uris", uris,
-                "unique", unique
-        );
-        return get("/stats?start={start}&end={end}&uris={uris}&unique={unique}", parameters);
+
+        StringBuilder uriBuilder = new StringBuilder("/stats?start={start}&end={end}");
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("start", start.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        parameters.put("end", end.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+
+        if (uris != null && uris.size() != 0) {
+            for (String one : uris) {
+                uriBuilder.append("&uris=").append(one);
+            }
+        }
+        if (unique != null) {
+            uriBuilder.append("&unique=").append(unique);
+        }
+
+        return get(uriBuilder.toString(), parameters);
     }
 
 }

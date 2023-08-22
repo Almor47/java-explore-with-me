@@ -15,7 +15,7 @@ public class ViewStats {
 
     private String uri;
 
-    private long hits;
+    private Long hits;
 
 
     @Override

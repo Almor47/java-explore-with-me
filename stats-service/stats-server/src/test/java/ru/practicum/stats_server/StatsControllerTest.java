@@ -45,7 +45,7 @@ public class StatsControllerTest {
         mvc.perform(post("/hit")
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(endpointHit)))
-                .andExpect(status().isOk());
+                .andExpect(status().isCreated());
 
 
         verify(statsService, times(1)).addHit(endpointHit);
