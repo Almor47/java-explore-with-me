@@ -14,8 +14,8 @@ public interface CommentMapper {
     @Mapping(target = "id", ignore = true)
     Comment newCommentDtoToComment(NewCommentDto newCommentDto, User user, Event event, LocalDateTime created);
 
-    @Mapping(target = "eventId", expression = "java(comment.getEvent().getId())")
-    @Mapping(target = "userId", expression = "java(comment.getUser().getId())")
+    @Mapping(target = "eventId", source = "event.id")
+    @Mapping(target = "userId", source = "user.id")
     CommentDto commentToCommentDto(Comment comment);
 
 }
